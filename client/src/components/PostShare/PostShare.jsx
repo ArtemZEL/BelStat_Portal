@@ -6,6 +6,8 @@ import {UilPlayCircle} from "@iconscout/react-unicons";
 import {UilNotes} from "@iconscout/react-unicons";
 import {UilSchedule} from "@iconscout/react-unicons";
 import {UilTimes} from "@iconscout/react-unicons";
+import { useDispatch, useSelector } from 'react-redux';
+import { uploadImage,uploadPost } from '../../actions/uploadActions';
 
 
 const PostShare = () => {
@@ -13,13 +15,13 @@ const PostShare = () => {
     const [video,setVideo]=useState(null)
     const imageRef=useRef();
     const videoRef=useRef();
+    const desc = useRef()
+    const dispatch =useDispatch()
+    const {user}=useSelector((state)=>state.authReducer.authData)
     const onImgChange=(event)=>{
         if(event.target.files && event.target.files[0]){
             let img =event.target.files[0];
-            setImage({
-                image:URL.createObjectURL(img),
-
-            });
+            setImage({img});
         }
     }
     const onVideoChange=(event)=>{
@@ -30,12 +32,42 @@ const PostShare = () => {
             });
         }
     }
+    const handleSubmit=(e)=>{
+        e.preventDefault();
+
+        const newPost={
+            userId:user._id,
+            desc:desc.current.value
+        }
+        if(image)
+        {
+            const data=new FormData();
+            const filename=Date.now() + image.name;
+            data.append("name",filename)
+            data.append("file",image)
+            newPost.image=filename;
+            console.log(newPost)
+            try {
+                dispatch(uploadImage(data))
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+        dispatch(uploadPost(newPost))
+
+    }
+
+
     return (
     <div className="PostShare">
         <img src={imgprofile} alt="" />
         <div>
             <input type="text"
-            placeholder='Напишите ваш пост' />
+            placeholder='Напишите ваш пост' 
+            ref={desc}
+            required
+            />
         <div className="postOptions">
             <div className="option"
             style={{color:"var(--photo)"}}
@@ -64,12 +96,14 @@ const PostShare = () => {
                 Расписание
             </div>
 
-            <button className="button ps-button">
+            <button className="button ps-button"
+            onClick={handleSubmit}
+            >
                 Запостить
             </button>
             <div style={{display:'none'}}>
                 <input type="file" 
-                name="myImg" 
+                name="myImage" 
                 ref={imageRef} 
                 onChange={onImgChange} 
                 />
@@ -85,7 +119,7 @@ const PostShare = () => {
             {image &&(
                 <div className="previewImg">
                     <UilTimes onClick={()=>setImage(null)}/>
-                    <img src={image.image} alt="" />
+                    <img src={URL.createObjectURL(image)} alt="" />
                 </div>
             )}
             {video &&(
