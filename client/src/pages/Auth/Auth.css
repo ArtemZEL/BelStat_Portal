@@ -80,4 +80,42 @@
     align-items:center;
     justify-content: center;
 }
+.Linked{
+    cursor: pointer;
+    font-size: 12px;
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .Linked::before,
+  .Linked::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    transition: width 0.3s ease-in-out;
+    background-color: #666;
+  }
+  
+  .Linked::before {
+    left: 0;
+  }
+  
+  .Linked::after {
+    right: 0;
+  }
+  
+  .Linked:hover {
+    color: #666;
+  }
+  
+  .Linked:hover::before,
+  .Linked:hover::after {
+    width: 50%;
+  }
 
+  
+  

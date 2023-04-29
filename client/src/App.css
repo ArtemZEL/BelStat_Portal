@@ -27,7 +27,7 @@
   width: 22rem;
   height: 14rem;
   border-radius: 50%;
-  background: #64e49d;
+  background: #3af162;
   filter: blur(72px);
 }
 .button{
@@ -71,5 +71,9 @@
 }
 ::-webkit-scrollbar{
     display: none;
+}
+.button:disabled{
+  background-color:silver;
+  pointer-events: none;
 }
 
